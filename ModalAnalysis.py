@@ -4,7 +4,7 @@ from scipy import linalg as LA
 
 
 class ModalAnalysis:
-    def __init__(self, elements, nodes, dimension):
+    def __init__(self, elements, nodes, dimension,arrested_dofs):
         '''
         Parameters: 
             elements - numpy nd-array with each row as an element with columns element number, node1, node2, Elastisity modulus, density, cross sectional area
@@ -24,6 +24,7 @@ class ModalAnalysis:
         self.massMatrices()
         self.stiffnessMatrices()
         self.M=self.assembleMass()
+        self.arrested_dofs=list((np.sort(arrested_dofs))[::-1])
 
     def findLengths(self, nodes, elements):
         '''
@@ -160,14 +161,17 @@ class ModalAnalysis:
             w - eigen values
             v - corresponding eigen vectors
         '''
-        w, v = LA.eig(np.matmul(np.linalg.inv(M), K))
-        to_rm = []
-        for i in range(w.shape[0]):
-            if np.imag(w[i]) != 0.0 or np.real(w[i]) < 0.0 or np.abs(np.real(w[i])) < 1e-7:
-                to_rm.append(i)
+        K=np.delete(K,self.arrested_dofs,axis=0)
+        K=np.delete(K,self.arrested_dofs,axis=1)
 
-        w = np.real(np.delete(w, to_rm))
-        v = np.real(np.delete(v, to_rm, 1))
+        M=np.delete(M,self.arrested_dofs,axis=0)
+        M=np.delete(M,self.arrested_dofs,axis=1)
+
+        w, v = LA.eig(np.matmul(np.linalg.inv(M), K))
+
+        w = np.real(w)
+        v = np.real(v)
+
         idx = np.arange(w.shape[0])
         zipped = zip(w, idx)
         zipped = sorted(zipped)
@@ -189,9 +193,3 @@ if __name__ == "__main__":
     w, v = aa.solve_eig(K, M)
     print(w.shape, v.shape)
     print(w)
-    # print(w[0])
-    # print(v[:, 0])
-
-    # A = np.matmul(np.linalg.inv(M), K)
-    # B = w[0]*np.eye(K.shape[0])
-    # print(np.matmul((A-B), v[:, 0]))
