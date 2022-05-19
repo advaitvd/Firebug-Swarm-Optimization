@@ -3,6 +3,7 @@ from ModalAnalysis import ModalAnalysis as ma
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+import seaborn as sns
 
 class FSO:
     def __init__(self, cost_fn, n_vars, Nf = 10, Nm = 10, ub=1, lb=0, S1_max = 100, L1 = 5, L2 = 5, S2_max = 153, verbose = False):
@@ -188,7 +189,7 @@ def analysis():
     
     np.savetxt(f'./{save_folder}/best_sols.csv',np.stack(best_sols),delimiter=',')
 
-def damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path):
+def damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max=20,S2_max=30, Nf=15, Nm=5):
     dimension = int(file_name[0])
     elements = pd.read_excel(file_name, sheet_name='Sheet1').values[:, 1:]
     nodes = pd.read_excel(file_name, sheet_name='Sheet2').values[:, 1:]
@@ -219,7 +220,7 @@ def damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path):
     
     print(objective_function(x_exp))
 
-    optimizer = FSO(n_vars=len(elements),cost_fn=objective_function, S1_max=20,S2_max=30, Nf=15, Nm=5,ub=1,lb=0, verbose = True)
+    optimizer = FSO(n_vars=len(elements),cost_fn=objective_function, S1_max=S1_max,S2_max=S2_max, Nf=Nf, Nm=Nm,ub=1,lb=0, verbose = True)
     
     log=optimizer.run()
 
@@ -232,14 +233,23 @@ def damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path):
     
     plt.savefig(path+'/convergence.png')
     plt.clf()
+
+    plt.figure(figsize=(10,5),dpi=120)
+    sns.barplot(y=optimizer.best_solution,x=np.arange(1,optimizer.best_solution.shape[0]+1))
+    plt.xticks(rotation=90)
+    plt.yticks(np.arange(0.0,1.0,0.05))
+    plt.xlabel('member')
+    plt.ylabel('damage parameter obtained')
+    plt.savefig(path+'/mean_damage.png')
+
     print("*"*80)
     print(f'optimal objective function value {optimizer.best_cost}')
     print()
     for i,val in enumerate(optimizer.best_solution):
         print(f'Damage at element {i+1} : {val}')
 
-def truss_2D_simple():
-    file_name = '2D-data-simple-truss.xlsx'
+def truss_2D_31_bar():
+    file_name = '2D-31-bar-truss.xlsx'
     arrested_dofs=np.array([0,1,17])
 
     x_exp=np.zeros(31)
@@ -248,11 +258,26 @@ def truss_2D_simple():
     x_exp[26]=0.25
 
     num_modes=5
-    path='./2D-simple-truss'
+    path='./2D-31-bar-truss'
     
     damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path)
+
+def truss_2D_52_bar():
+    file_name = '2D-52-bar-truss.xlsx'
+    arrested_dofs=np.array([0,1,2,3,4,5,6,7])
+
+    x_exp=np.zeros(52)
+    x_exp[11]=0.35
+    x_exp[34]=0.15
+    x_exp[46]=0.25
+
+    num_modes=5
+    path='./2D-52-bar-truss'
+    
+    damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max=100,S2_max=50, Nf=15, Nm=10)
 
 if __name__ == '__main__':
     # rastrigin()
     # analysis()
-    truss_2D_simple()   #   $ FSO.py > ./2D-simple-truss/log.txt
+    # truss_2D_31_bar()   #   $ FSO.py > ./2D-31-bar-truss/log.txt
+    truss_2D_52_bar()   #   $ FSO.py > ./2D-52-bar-truss/log.txt

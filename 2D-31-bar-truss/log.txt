@@ -1,0 +1,55 @@
+0.0
+step 1 : 1.3219870716145503
+step 2 : 0.2949904110946694
+step 3 : 0.07508322211741897
+step 4 : 0.01674160506354649
+step 5 : 0.005228852241532303
+step 6 : 0.0024911033024776663
+step 7 : 0.0010789469335137159
+step 8 : 0.000335304554459886
+step 9 : 0.00013996902786624524
+step 10 : 0.00010154570167569683
+step 11 : 5.82093802854375e-05
+step 12 : 4.919809607722574e-06
+step 13 : 2.204492648061399e-06
+step 14 : 1.2070075849964362e-06
+step 15 : 4.891387545310626e-07
+step 16 : 3.234191262175285e-07
+step 17 : 1.8850497965500818e-08
+step 18 : 6.4530062601550154e-09
+step 19 : 1.3384423042572903e-09
+step 20 : 4.2202359366011955e-10
+********************************************************************************
+optimal objective function value 1.4785589682598464e-10
+
+Damage at element 1 : 3.724333388109526e-07
+Damage at element 2 : 0.0
+Damage at element 3 : 5.68947102832706e-06
+Damage at element 4 : 0.0
+Damage at element 5 : 0.34998203957205887
+Damage at element 6 : 3.699287478747894e-06
+Damage at element 7 : 0.0
+Damage at element 8 : 2.038438161052557e-05
+Damage at element 9 : 1.6795308434174655e-05
+Damage at element 10 : 3.780462215514086e-05
+Damage at element 11 : 9.850748516690536e-05
+Damage at element 12 : 5.230732887678848e-07
+Damage at element 13 : 0.0
+Damage at element 14 : 1.0473899650971662e-06
+Damage at element 15 : 1.6752860900281092e-06
+Damage at element 16 : 0.15005775206485072
+Damage at element 17 : 4.5909835369561445e-06
+Damage at element 18 : 1.6625206229214472e-05
+Damage at element 19 : 0.0
+Damage at element 20 : 2.4621047279108823e-09
+Damage at element 21 : 5.590521697422259e-05
+Damage at element 22 : 1.5853530389968648e-06
+Damage at element 23 : 1.417518660976699e-06
+Damage at element 24 : 2.4549956128296625e-05
+Damage at element 25 : 0.0
+Damage at element 26 : 1.3721375262953874e-05
+Damage at element 27 : 0.249992499267235
+Damage at element 28 : 6.543930504380947e-08
+Damage at element 29 : 6.738877161205748e-07
+Damage at element 30 : 0.0
+Damage at element 31 : 4.262135589127946e-06
