@@ -2,6 +2,7 @@ import numpy as np
 from ModalAnalysis import ModalAnalysis as ma
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 class FSO:
     def __init__(self, cost_fn, n_vars, Nf = 10, Nm = 10, ub=1, lb=0, S1_max = 100, L1 = 5, L2 = 5, S2_max = 153, verbose = False):
@@ -163,9 +164,70 @@ def main(iter):
     print(optimizer.best_cost, optimizer.best_solution)
     return optimizer.best_solution
 
+def truss_2D_simple():
+    file_name = '2D-data-simple-truss.xlsx'
+    dimension = int(file_name[0])
+    elements = pd.read_excel(file_name, sheet_name='Sheet1').values[:, 1:]
+    nodes = pd.read_excel(file_name, sheet_name='Sheet2').values[:, 1:]
+    
+    arrested_dofs=np.array([0,1,17])
+    aa = ma(elements, nodes, dimension,arrested_dofs=arrested_dofs)
+    M=aa.assembleMass()
+
+    x_exp=np.zeros(len(elements))
+    x_exp[4]=0.35
+    x_exp[15]=0.15
+    x_exp[26]=0.25
+
+    K=aa.assembleStiffness(x_exp)
+    w_exp, v_exp=aa.solve_eig(K,aa.M)
+    
+    num_modes=5
+
+    w_exp=w_exp[:num_modes]
+    v_exp=v_exp[:,:num_modes]
+    F_exp=np.sum(v_exp*v_exp,axis=0)/(w_exp*w_exp)
+
+    def objective_function(x):
+        K=aa.assembleStiffness(x)
+        w, v = aa.solve_eig(K, aa.M)
+        w=w[:num_modes]
+        v=v[:,:num_modes]
+        
+        MAC=(np.sum((v*v_exp),axis=0)**2)/(np.sum(v*v,axis=0)*np.sum(v_exp*v_exp,axis=0))
+        
+        F=np.sum(v*v,axis=0)/(w*w)
+        MACF=(np.sum(F*F_exp)**2)/(np.sum(F*F)*np.sum(F_exp*F_exp))
+
+        MDLAC=(np.abs(w-w_exp)/w_exp)**2
+        cost = np.sum(1-MAC)+np.sum(MDLAC)+np.sum(1-MACF)
+        return cost
+    
+    print(objective_function(x_exp))
+
+    optimizer = FSO(n_vars=len(elements),cost_fn=objective_function, S1_max=20,S2_max=30, Nf=15, Nm=5,ub=1,lb=0, verbose = True)
+    
+    log=optimizer.run()
+
+    # plt.yscale('log')
+    plt.plot(log,'r-')
+    plt.ylabel('cost')
+    plt.xlabel('iteration')
+
+    path='./2D-simple-truss'
+    if not os.path.exists(path):
+        os.makedirs(path)
+    
+    plt.savefig(path+'/convergence.png')
+    plt.clf()
+    print("*"*80)
+    print(f'optimal objective function value {optimizer.best_cost}')
+    print()
+    for i,val in enumerate(optimizer.best_solution):
+        print(f'Damage at element {i+1} : {val}')
 
 
-if __name__ == '__main__':
+def rastrigin():
     def func(x):
         n=5
         return n*10+np.sum(x**2-10*np.cos(2*np.pi*x))
@@ -181,9 +243,14 @@ if __name__ == '__main__':
     plt.savefig('./rastrigin_convergence_5D.png')
     plt.clf()
 
-    # best_sols=[]
-
-    # for i in range(1,6):
-    #     best_sols.append(main(i).reshape(-1,))
+def analysis():
+    best_sols=[]
+    for i in range(1,6):
+        best_sols.append(main(i).reshape(-1,))
     
-    # np.savetxt(f'./{save_folder}/best_sols.csv',np.stack(best_sols),delimiter=',')
+    np.savetxt(f'./{save_folder}/best_sols.csv',np.stack(best_sols),delimiter=',')
+
+if __name__ == '__main__':
+    # rastrigin()
+    # analysis()
+    truss_2D_simple()

@@ -1,0 +1,55 @@
+0.0
+step 1 : 1.3109521541806637
+step 2 : 0.3756676735229401
+step 3 : 0.1360555055491299
+step 4 : 0.03129095372458407
+step 5 : 0.00927361904234881
+step 6 : 0.0023836300407849426
+step 7 : 0.0005340765007161307
+step 8 : 8.153977839976657e-05
+step 9 : 1.8173475949000752e-05
+step 10 : 3.502947540886442e-06
+step 11 : 8.390002581816173e-07
+step 12 : 1.6719875893928522e-07
+step 13 : 6.737396879044332e-08
+step 14 : 2.0290786680831588e-08
+step 15 : 4.977144770432713e-09
+step 16 : 1.3754076903394817e-09
+step 17 : 3.6974986937767783e-10
+step 18 : 2.0433729136072432e-10
+step 19 : 3.847194777230904e-11
+step 20 : 1.0086969499175228e-11
+********************************************************************************
+optimal objective function value 1.350086147774899e-12
+
+Damage at element 1 : 0.0
+Damage at element 2 : 1.0428912983563768e-06
+Damage at element 3 : 1.7926836051040352e-08
+Damage at element 4 : 6.032475533824126e-10
+Damage at element 5 : 0.34999891701787
+Damage at element 6 : 7.076465459996343e-09
+Damage at element 7 : 3.316702919546096e-07
+Damage at element 8 : 0.0
+Damage at element 9 : 3.7731434201163017e-06
+Damage at element 10 : 2.5299522236455936e-06
+Damage at element 11 : 1.5807686962596185e-06
+Damage at element 12 : 0.0
+Damage at element 13 : 0.0
+Damage at element 14 : 1.671383601995948e-06
+Damage at element 15 : 0.0
+Damage at element 16 : 0.15000123880814853
+Damage at element 17 : 0.0
+Damage at element 18 : 9.565812836954325e-07
+Damage at element 19 : 1.4840956760469441e-06
+Damage at element 20 : 1.2452806871255768e-07
+Damage at element 21 : 5.028660467091181e-06
+Damage at element 22 : 3.640150773820538e-10
+Damage at element 23 : 1.4411284627759282e-08
+Damage at element 24 : 0.0
+Damage at element 25 : 0.0
+Damage at element 26 : 0.0
+Damage at element 27 : 0.25000040481147184
+Damage at element 28 : 2.526810011001926e-07
+Damage at element 29 : 6.31199929320264e-10
+Damage at element 30 : 6.772250574046851e-09
+Damage at element 31 : 1.4219649690259372e-06
