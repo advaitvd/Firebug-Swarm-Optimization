@@ -276,8 +276,23 @@ def truss_2D_52_bar():
     
     damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max=100,S2_max=50, Nf=15, Nm=10)
 
+def truss_2D_15_bar():
+    file_name = '2D-15-bar-truss.xlsx'
+    arrested_dofs=np.array([12,13,14,15])
+
+    x_exp=np.zeros(15)
+    x_exp[2]=0.10
+    x_exp[7]=0.15
+    x_exp[13]=0.20
+
+    num_modes=5
+    path='./2D-15-bar-truss'
+    
+    damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max=20,S2_max=10, Nf=10, Nm=5)
+
 if __name__ == '__main__':
     # rastrigin()
     # analysis()
     # truss_2D_31_bar()   #   $ FSO.py > ./2D-31-bar-truss/log.txt
-    truss_2D_52_bar()   #   $ FSO.py > ./2D-52-bar-truss/log.txt
+    # truss_2D_52_bar()   #   $ FSO.py > ./2D-52-bar-truss/log.txt
+    truss_2D_15_bar()   #   $ FSO.py > ./2D-15-bar-truss/log.txt
