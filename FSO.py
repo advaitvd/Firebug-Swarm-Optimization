@@ -164,26 +164,40 @@ def main(iter):
     print(optimizer.best_cost, optimizer.best_solution)
     return optimizer.best_solution
 
-def truss_2D_simple():
-    file_name = '2D-data-simple-truss.xlsx'
+
+def rastrigin():
+    def func(x):
+        n=5
+        return n*10+np.sum(x**2-10*np.cos(2*np.pi*x))
+
+    optimizer = FSO(cost_fn=func, S1_max=50,S2_max=300, n_vars = 5, Nf=10, Nm=10,ub=5.12,lb=-5.12,verbose = True)
+    log=np.array(optimizer.run())
+    log[log<1e-15]=1e-15
+    print(optimizer.best_cost, optimizer.best_solution)
+    plt.yscale('log')
+    plt.plot(log,'r-')
+    plt.ylabel('cost')
+    plt.xlabel('iteration')
+    plt.savefig('./rastrigin_convergence_5D.png')
+    plt.clf()
+
+def analysis():
+    best_sols=[]
+    for i in range(1,6):
+        best_sols.append(main(i).reshape(-1,))
+    
+    np.savetxt(f'./{save_folder}/best_sols.csv',np.stack(best_sols),delimiter=',')
+
+def damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path):
     dimension = int(file_name[0])
     elements = pd.read_excel(file_name, sheet_name='Sheet1').values[:, 1:]
     nodes = pd.read_excel(file_name, sheet_name='Sheet2').values[:, 1:]
     
-    arrested_dofs=np.array([0,1,17])
     aa = ma(elements, nodes, dimension,arrested_dofs=arrested_dofs)
     M=aa.assembleMass()
 
-    x_exp=np.zeros(len(elements))
-    x_exp[4]=0.35
-    x_exp[15]=0.15
-    x_exp[26]=0.25
-
     K=aa.assembleStiffness(x_exp)
     w_exp, v_exp=aa.solve_eig(K,aa.M)
-    
-    num_modes=5
-
     w_exp=w_exp[:num_modes]
     v_exp=v_exp[:,:num_modes]
     F_exp=np.sum(v_exp*v_exp,axis=0)/(w_exp*w_exp)
@@ -209,12 +223,10 @@ def truss_2D_simple():
     
     log=optimizer.run()
 
-    # plt.yscale('log')
     plt.plot(log,'r-')
     plt.ylabel('cost')
     plt.xlabel('iteration')
 
-    path='./2D-simple-truss'
     if not os.path.exists(path):
         os.makedirs(path)
     
@@ -226,31 +238,21 @@ def truss_2D_simple():
     for i,val in enumerate(optimizer.best_solution):
         print(f'Damage at element {i+1} : {val}')
 
+def truss_2D_simple():
+    file_name = '2D-data-simple-truss.xlsx'
+    arrested_dofs=np.array([0,1,17])
 
-def rastrigin():
-    def func(x):
-        n=5
-        return n*10+np.sum(x**2-10*np.cos(2*np.pi*x))
+    x_exp=np.zeros(31)
+    x_exp[4]=0.35
+    x_exp[15]=0.15
+    x_exp[26]=0.25
 
-    optimizer = FSO(cost_fn=func, S1_max=50,S2_max=300, n_vars = 5, Nf=10, Nm=10,ub=5.12,lb=-5.12,verbose = True)
-    log=np.array(optimizer.run())
-    log[log<1e-15]=1e-15
-    print(optimizer.best_cost, optimizer.best_solution)
-    plt.yscale('log')
-    plt.plot(log,'r-')
-    plt.ylabel('cost')
-    plt.xlabel('iteration')
-    plt.savefig('./rastrigin_convergence_5D.png')
-    plt.clf()
-
-def analysis():
-    best_sols=[]
-    for i in range(1,6):
-        best_sols.append(main(i).reshape(-1,))
+    num_modes=5
+    path='./2D-simple-truss'
     
-    np.savetxt(f'./{save_folder}/best_sols.csv',np.stack(best_sols),delimiter=',')
+    damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path)
 
 if __name__ == '__main__':
     # rastrigin()
     # analysis()
-    truss_2D_simple()
+    truss_2D_simple()   #   $ FSO.py > ./2D-simple-truss/log.txt
