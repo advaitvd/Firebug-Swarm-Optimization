@@ -224,6 +224,7 @@ def damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max
     
     log=optimizer.run()
 
+    plt.yscale('log')
     plt.plot(log,'r-')
     plt.ylabel('cost')
     plt.xlabel('iteration')
@@ -306,10 +307,23 @@ def truss_3D_25_bar():
     
     damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max=75,S2_max=50, Nf=15, Nm=10)
 
+def truss_3D_72_bar():
+    file_name = '3D-72-bar-truss.xlsx'
+    arrested_dofs=np.array([0,1,2,3,4,5,6,7,8,9,10,11])
+
+    x_exp=np.zeros(72)
+    x_exp[19]=0.45
+
+    num_modes=5
+    path='./3D-72-bar-truss'
+    
+    damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max=50,S2_max=50, Nf=20, Nm=10)
+
 if __name__ == '__main__':
     # rastrigin()
     # analysis()
     # truss_2D_31_bar()   #   $ FSO.py > ./2D-31-bar-truss/log.txt
     # truss_2D_52_bar()   #   $ FSO.py > ./2D-52-bar-truss/log.txt
     # truss_2D_15_bar()   #   $ FSO.py > ./2D-15-bar-truss/log.txt
-    truss_3D_25_bar()   # FSO.py > ./3D-25-bar-truss/log.txt
+    # truss_3D_25_bar()   # FSO.py > ./3D-25-bar-truss/log.txt
+    truss_3D_72_bar()   #FSO.py > ./3D-72-bar-truss/log.txt
