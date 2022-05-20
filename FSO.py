@@ -319,11 +319,28 @@ def truss_3D_72_bar():
     
     damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max=50,S2_max=50, Nf=20, Nm=10)
 
+def truss_3D_72_bar_small_distributed_damage():
+    file_name = '3D-72-bar-truss.xlsx'
+    arrested_dofs=np.array([0,1,2,3,4,5,6,7,8,9,10,11])
+
+    x_exp=np.zeros(72)
+    x_exp[1]=0.085
+    x_exp[5]=0.055
+    x_exp[33]=0.105
+    x_exp[46]=0.065
+    x_exp[63]=0.153
+
+    num_modes=5
+    path='./3D-72-bar-truss-small-distributed-damage'
+    
+    damage_detection_problem(file_name,arrested_dofs,num_modes,x_exp,path,S1_max=200,S2_max=100, Nf=25, Nm=20)
+
 if __name__ == '__main__':
     # rastrigin()
     # analysis()
     # truss_2D_31_bar()   #   $ FSO.py > ./2D-31-bar-truss/log.txt
     # truss_2D_52_bar()   #   $ FSO.py > ./2D-52-bar-truss/log.txt
     # truss_2D_15_bar()   #   $ FSO.py > ./2D-15-bar-truss/log.txt
-    # truss_3D_25_bar()   # FSO.py > ./3D-25-bar-truss/log.txt
-    truss_3D_72_bar()   #FSO.py > ./3D-72-bar-truss/log.txt
+    # truss_3D_25_bar()   #   $ FSO.py > ./3D-25-bar-truss/log.txt
+    # truss_3D_72_bar()   #   $ FSO.py > ./3D-72-bar-truss/log.txt
+    truss_3D_72_bar_small_distributed_damage()  #   $ FSO.py > ./3D-72-bar-truss-small-distributed-damage/log.txt
